@@ -1,0 +1,60 @@
+CREATE DATABASE Airport_Management
+GO
+USE Airport_Management
+CREATE TABLE Foods(
+	Food_id INT PRIMARY KEY IDENTITY,
+	Name VARCHAR(50) NOT NULL,
+	Description VARCHAR(50))
+CREATE TABLE Restaurants(
+	R_id INT PRIMARY KEY IDENTITY,
+	Ranking INT,
+	Name VARCHAR(50))
+CREATE TABLE Passengers(
+	CNP INT PRIMARY KEY IDENTITY,
+	CheckIn DATETIME)
+CREATE TABLE Luggages(
+	Passenger_id INT FOREIGN KEY REFERENCES Passengers(CNP),
+	Size INT NOT NULL,
+	CONSTRAINT pk_Passengers PRIMARY KEY (Passenger_id))
+CREATE TABLE Orders(
+	O_id INT PRIMARY KEY IDENTITY,
+	R_id INT FOREIGN KEY REFERENCES Restaurants(R_id),
+	CNP INT FOREIGN KEY REFERENCES Passengers(CNP),
+	Date DATETIME,
+	Price INT )
+CREATE TABLE OrderDetails(
+	O_id INT FOREIGN KEY REFERENCES Orders(O_id),
+	Food_id INT FOREIGN KEY REFERENCES Foods(Food_id),
+	CONSTRAINT pk_Order_Food PRIMARY KEY(O_id,Food_id))
+CREATE TABLE Planes(
+	P_id INT PRIMARY KEY IDENTITY,
+	Model VARCHAR(50),
+	Capacity VARCHAR(50),
+	Fuel_consumption INT)
+CREATE TABLE Flights(
+	F_id INT PRIMARY KEY IDENTITY,
+	Plane_id INT FOREIGN KEY REFERENCES Planes(P_id),
+	Passenger_id INT FOREIGN KEY REFERENCES Passengers(CNP),
+	Date DATETIME NOT NULL,
+	Origin VARCHAR(50) NOT NULL DEFAULT 'Airport1',
+	Destination VARCHAR(50) NOT NULL DEFAULT 'Ariport2')
+CREATE TABLE Employees(
+	E_id INT PRIMARY KEY IDENTITY,
+	Name VARCHAR(50) NOT NULL,
+	Position VARCHAR(50))
+CREATE TABLE Working_schedule(
+	Flight_id INT FOREIGN KEY REFERENCES Flights(F_id),
+	Employee_id INT FOREIGN KEY REFERENCES Employees(E_id),
+	CONSTRAINT pk_Flights_Employees PRIMARY KEY (Flight_id,Employee_id))
+CREATE TABLE Carts(
+	C_id INT PRIMARY KEY IDENTITY,
+	Model VARCHAR(50))
+CREATE TABLE Repairs(
+	Repair_id INT PRIMARY KEY IDENTITY,
+	Cart_id INT FOREIGN KEY REFERENCES Carts(C_id),
+	Description VARCHAR(50),
+	Cost INT NOT NULL)
+CREATE TABLE Repair_schedule(
+	Repair_id INT FOREIGN KEY REFERENCES Repairs(Repair_id),
+	Employee_id INT FOREIGN KEY REFERENCES Employees(E_id),
+	CONSTRAINT pk_Repairs_Employees PRIMARY KEY (Repair_id,Employee_id))
